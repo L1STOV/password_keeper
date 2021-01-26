@@ -1,5 +1,5 @@
 import unittest
-from main import set_up_root_password, passwords_requirements_checker
+from main import set_up_root_password, root_password_requirements_checker
 
 
 class TestMain(unittest.TestCase):
@@ -12,8 +12,8 @@ class TestMain(unittest.TestCase):
     def test_set_up_root_password(self):
         self.assertEqual(set_up_root_password(self.root_password), '*** root password was created ***')
 
-    def test_password_requirements_checker(self):
-        self.assertEqual(passwords_requirements_checker(self.root_password), '*** password requirements are met *** ')
+    def test_root_password_requirements_checker(self):
+        self.assertEqual(root_password_requirements_checker(self.root_password), '*** password requirements are met ***')
 
 
 if __name__ == '__main__':
