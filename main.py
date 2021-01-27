@@ -2,8 +2,14 @@ import re
 from db_config import connection, cursor
 
 
-def existed_user_checker():
-    pass
+def existed_root_user_checker():
+    existed_user_query = "SELECT username FROM passwords WHERE service='root_service';"
+    try:
+        cursor.execute(existed_user_query)
+        existed_user = cursor.fetchall()
+        return len(existed_user)
+    except IndexError as e:
+        return '*** you need to create root password ***'
 
 
 def set_up_root_password(password):
@@ -26,5 +32,8 @@ def root_password_requirements_checker(password):
 
 
 if __name__ == '__main__':
-    root_password = input('root password: ')
-    print(root_password_requirements_checker(root_password))
+    if existed_root_user_checker() == 0:
+        root_password_set_up = input('create your root password: ')
+        print(set_up_root_password(root_password_set_up))
+    else:
+        print('*** command list ***')
