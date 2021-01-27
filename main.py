@@ -12,6 +12,16 @@ def existed_root_user_checker():
         return '*** you need to create root password ***'
 
 
+def root_password_checker(password):
+    root_password_query = "SELECT password FROM passwords WHERE service='root_service'"
+    cursor.execute(root_password_query)
+    root_password = cursor.fetchone()
+    if str(password) == str(root_password[0]):
+        return '*** success ***'
+    else:
+        return '*** failed ***'
+
+
 def set_up_root_password(password):
     root_password_set_up_query = 'INSERT INTO passwords(id, service, username, password, hash_password)' \
                                  ' VALUES(1, \'root_service\', \'root_user\', \'%s\', \'***\' );' % password
@@ -36,4 +46,5 @@ if __name__ == '__main__':
         root_password_set_up = input('create your root password: ')
         print(set_up_root_password(root_password_set_up))
     else:
-        print('*** command list ***')
+        root_password_for_check = input('your root password: ')
+        print(root_password_checker(root_password_for_check))
