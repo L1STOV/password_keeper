@@ -1,4 +1,5 @@
 import re
+import base64
 from db_config import connection, cursor
 
 
@@ -54,11 +55,33 @@ def command_checker(command_input):
     if command_input not in command_list:
         return f'*** {command_input} is not a command ***'
     elif command_input == '-a':
-        pass
+        add_password()
     elif command_input == '-v':
-        pass
+        view_passwords()
     elif command_input == '-d':
-        pass
+        delete_password()
+
+
+def add_password():
+    print('*** add password ***')
+    service = input('service name: ')
+    username = input('username: ')
+    password = input('password: ')
+    hash_password = base64.b64encode(b'{password}')
+    # print(f'{service} {username} {password} {hash_password}')
+    insert_new_password_query = "INSERT INTO passwords(service, username, password, hash_password)" \
+                                " VALUES ('%s', '%s', '%s', '%s');" % (service, username, password, hash_password)
+    cursor.execute(insert_new_password_query)
+    connection.commit()
+    return f'{service} {username} {password} {hash_password}'
+
+
+def view_passwords():
+    pass
+
+
+def delete_password():
+    pass
 
 
 if __name__ == '__main__':
@@ -69,3 +92,5 @@ if __name__ == '__main__':
         root_password_for_check = input('your root password: ')
         print(root_password_checker(root_password_for_check))
         print(commands_info())
+        command = input('command: ')
+        print(command_checker(command))
