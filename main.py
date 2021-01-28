@@ -41,6 +41,26 @@ def root_password_requirements_checker(password):
             return "*** password requirements not met ***"
 
 
+def commands_info():
+    output_info = '*** available commands ***\n' \
+                  '\t -a - to add new password\n' \
+                  '\t -v - to view your passwords\n' \
+                  '\t -d - to delete your password\n'
+    return output_info
+
+
+def command_checker(command_input):
+    command_list = ['-a', '-v', '-d']
+    if command_input not in command_list:
+        return f'*** {command_input} is not a command ***'
+    elif command_input == '-a':
+        pass
+    elif command_input == '-v':
+        pass
+    elif command_input == '-d':
+        pass
+
+
 if __name__ == '__main__':
     if existed_root_user_checker() == 0:
         root_password_set_up = input('create your root password: ')
@@ -48,3 +68,4 @@ if __name__ == '__main__':
     else:
         root_password_for_check = input('your root password: ')
         print(root_password_checker(root_password_for_check))
+        print(commands_info())
