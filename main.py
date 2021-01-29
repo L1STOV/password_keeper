@@ -24,8 +24,8 @@ def root_password_checker(password):
 
 
 def set_up_root_password(password):
-    root_password_set_up_query = 'INSERT INTO passwords(id, service, username, password, hash_password)' \
-                                 ' VALUES(1, \'root_service\', \'root_user\', \'%s\', \'***\' );' % password
+    root_password_set_up_query = 'INSERT INTO passwords(service, username, password, hash_password)' \
+                                 ' VALUES(\'root_service\', \'root_user\', \'%s\', \'***\' );' % password
     cursor.execute(root_password_set_up_query)
     connection.commit()
     return '*** root password was created ***'
@@ -55,7 +55,7 @@ def command_checker(command_input):
     if command_input not in command_list:
         return f'*** {command_input} is not a command ***'
     elif command_input == '-a':
-        add_password()
+        print(add_password())
     elif command_input == '-v':
         view_passwords()
     elif command_input == '-d':
@@ -67,13 +67,13 @@ def add_password():
     service = input('service name: ')
     username = input('username: ')
     password = input('password: ')
-    hash_password = base64.b64encode(b'{password}')
-    # print(f'{service} {username} {password} {hash_password}')
+    row_hash_password = str(base64.b64encode(b'{password}'))
+    hash_password = row_hash_password[2:-1]
     insert_new_password_query = "INSERT INTO passwords(service, username, password, hash_password)" \
                                 " VALUES ('%s', '%s', '%s', '%s');" % (service, username, password, hash_password)
     cursor.execute(insert_new_password_query)
     connection.commit()
-    return f'{service} {username} {password} {hash_password}'
+    return f'*** {username} \'s password for {service} was added ***'
 
 
 def view_passwords():
@@ -93,4 +93,4 @@ if __name__ == '__main__':
         print(root_password_checker(root_password_for_check))
         print(commands_info())
         command = input('command: ')
-        print(command_checker(command))
+        command_checker(command)
