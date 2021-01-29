@@ -70,8 +70,9 @@ def add_password():
     service = input('service name: ')
     username = input('username: ')
     password = input('password: ')
-    row_hash_password = str(base64.b64encode(b'{password}'))
-    hash_password = row_hash_password[2:-1]
+    row_hash_password = password.encode('ascii')
+    bytes_password = str(base64.b64encode(row_hash_password))
+    hash_password = bytes_password[2:-1]
     insert_new_password_query = "INSERT INTO passwords(service, username, password, hash_password)" \
                                 " VALUES ('%s', '%s', '%s', '%s');" % (service, username, password, hash_password)
     cursor.execute(insert_new_password_query)
