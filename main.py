@@ -10,7 +10,7 @@ def existed_root_user_checker():
         existed_user = cursor.fetchall()
         return len(existed_user)
     except IndexError as e:
-        return '*** you need to create root password ***'
+        return '*** you need to create root password ***\n'
 
 
 def root_password_checker(password):
@@ -18,9 +18,9 @@ def root_password_checker(password):
     cursor.execute(root_password_query)
     root_password = cursor.fetchone()
     if str(password) == str(root_password[0]):
-        return '*** success ***'
+        return '*** success ***\n'
     else:
-        return '*** failed ***'
+        return '*** failed ***\n'
 
 
 def set_up_root_password(password):
@@ -28,7 +28,7 @@ def set_up_root_password(password):
                                  ' VALUES(\'root_service\', \'root_user\', \'%s\', \'***\' );' % password
     cursor.execute(root_password_set_up_query)
     connection.commit()
-    return '*** root password was created ***'
+    return '*** root password was created ***\n'
 
 
 def root_password_requirements_checker(password):
@@ -37,9 +37,9 @@ def root_password_requirements_checker(password):
         result = re.findall(pattern, password)
         if result:
             set_up_root_password(password)
-            return "*** password requirements are met ***"
+            return "*** password requirements are met ***\n"
         else:
-            return "*** password requirements not met ***"
+            return "*** password requirements not met ***\n"
 
 
 def commands_info():
@@ -47,7 +47,7 @@ def commands_info():
                   '\t -a - to add new password\n' \
                   '\t -v - to view your passwords\n' \
                   '\t -d - to delete your password\n' \
-                  '\t -q - to close program'
+                  '\t -q - to close program\n'
     return output_info
 
 
@@ -60,9 +60,7 @@ def command_checker(command_input):
     elif command_input == '-v':
         print(view_passwords())
     elif command_input == '-d':
-        delete_password()
-    elif command_input == '-q':
-        pass
+        print(delete_password())
 
 
 def add_password():
@@ -76,7 +74,7 @@ def add_password():
                                 " VALUES ('%s', '%s', '%s', '%s');" % (service, username, password, hash_password)
     cursor.execute(insert_new_password_query)
     connection.commit()
-    return f'*** {username} \'s password for {service} was added ***'
+    return f'*** {username} \'s password for {service} was added ***\n'
 
 
 def view_passwords():
@@ -90,7 +88,12 @@ def view_passwords():
 
 
 def delete_password():
-    pass
+    print("*** delete password ***")
+    service = input('input service name: ').lower()
+    delete_password_query = "DELETE FROM passwords WHERE service='%s';" % service
+    cursor.execute(delete_password_query)
+    connection.commit()
+    return f'*** password for {service} was deleted ***\n'
 
 
 if __name__ == '__main__':
@@ -104,3 +107,6 @@ if __name__ == '__main__':
         while True:
             command = input('command: ')
             command_checker(command)
+            if command == '-q':
+                print('*** closed ***')
+                break
