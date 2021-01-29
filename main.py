@@ -46,20 +46,23 @@ def commands_info():
     output_info = '*** available commands ***\n' \
                   '\t -a - to add new password\n' \
                   '\t -v - to view your passwords\n' \
-                  '\t -d - to delete your password\n'
+                  '\t -d - to delete your password\n' \
+                  '\t -q - to close program'
     return output_info
 
 
 def command_checker(command_input):
-    command_list = ['-a', '-v', '-d']
+    command_list = ['-a', '-v', '-d', '-q']
     if command_input not in command_list:
         return f'*** {command_input} is not a command ***'
     elif command_input == '-a':
         print(add_password())
     elif command_input == '-v':
-        view_passwords()
+        print(view_passwords())
     elif command_input == '-d':
         delete_password()
+    elif command_input == '-q':
+        pass
 
 
 def add_password():
@@ -77,7 +80,13 @@ def add_password():
 
 
 def view_passwords():
-    pass
+    print('*** view passwords ***')
+    view_passwords_query = "SELECT * FROM passwords OFFSET 1;"
+    cursor.execute(view_passwords_query)
+    output = ''
+    for row in cursor:
+        output += f'service - {row[1]}, username - {row[2]}, password - {row[3]}\n'
+    return output
 
 
 def delete_password():
@@ -92,5 +101,6 @@ if __name__ == '__main__':
         root_password_for_check = input('your root password: ')
         print(root_password_checker(root_password_for_check))
         print(commands_info())
-        command = input('command: ')
-        command_checker(command)
+        while True:
+            command = input('command: ')
+            command_checker(command)
