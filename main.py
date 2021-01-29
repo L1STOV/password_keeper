@@ -1,4 +1,5 @@
 import re
+import sys
 import base64
 from db_config import connection, cursor
 
@@ -20,7 +21,8 @@ def root_password_checker(password):
     if str(password) == str(root_password[0]):
         return '*** success ***\n'
     else:
-        return '*** failed ***\n'
+        print('*** incorrect password ***\n')
+        sys.exit()
 
 
 def set_up_root_password(password):
@@ -96,17 +98,22 @@ def delete_password():
     return f'*** password for {service} was deleted ***\n'
 
 
+def workflow():
+    print(commands_info())
+    while True:
+        command = input('command: ')
+        command_checker(command)
+        if command == '-q':
+            print('*** closed ***')
+            break
+
+
 if __name__ == '__main__':
     if existed_root_user_checker() == 0:
         root_password_set_up = input('create your root password: ')
         print(set_up_root_password(root_password_set_up))
+        workflow()
     else:
         root_password_for_check = input('your root password: ')
         print(root_password_checker(root_password_for_check))
-        print(commands_info())
-        while True:
-            command = input('command: ')
-            command_checker(command)
-            if command == '-q':
-                print('*** closed ***')
-                break
+        workflow()
